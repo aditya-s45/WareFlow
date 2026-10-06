@@ -7,7 +7,7 @@ import time
 from datetime import datetime
 
 import numpy as np
-from stable_baselines3 import PPO
+from stable_baselines3 import DQN
 from stable_baselines3.common.vec_env import SubprocVecEnv, DummyVecEnv
 from stable_baselines3.common.callbacks import (
     CheckpointCallback,
@@ -189,19 +189,19 @@ def train(args):
     os.makedirs(checkpoint_dir, exist_ok=True)
     os.makedirs(best_model_dir, exist_ok=True)
 
-    # ── Build PPO model ──
-    model = PPO(
+    # ── Build DQN model ──
+    model = DQN(
         policy="CnnPolicy",
         env=vec_env,
         learning_rate=args.lr,
-        n_steps=args.n_steps,
+        buffer_size=10000, learning_starts=1000, train_freq=4, gradient_steps=1, target_update_interval=1000,
         batch_size=args.batch_size,
-        n_epochs=args.n_epochs,
+        
         gamma=args.gamma,
-        gae_lambda=args.gae_lambda,
-        clip_range=args.clip_range,
-        ent_coef=args.ent_coef,
-        vf_coef=0.5,
+        
+        
+        
+        
         max_grad_norm=0.5,
         policy_kwargs=POLICY_KWARGS,
         tensorboard_log=args.tb_dir,
@@ -326,10 +326,10 @@ Examples:
     parser.add_argument("--ent_coef", type=float, default=0.01, help="Entropy coefficient (exploration)")
     parser.add_argument("--gamma", type=float, default=0.99, help="Discount factor")
     parser.add_argument("--gae_lambda", type=float, default=0.95, help="GAE lambda")
-    parser.add_argument("--clip_range", type=float, default=0.2, help="PPO clip range")
+    parser.add_argument("--clip_range", type=float, default=0.2, help="DQN clip range")
     parser.add_argument("--batch_size", type=int, default=64, help="Minibatch size")
     parser.add_argument("--n_steps", type=int, default=2048, help="Steps per rollout")
-    parser.add_argument("--n_epochs", type=int, default=10, help="PPO epochs per update")
+    parser.add_argument("--n_epochs", type=int, default=10, help="DQN epochs per update")
 
     # Parallelism
     parser.add_argument("--n_envs", type=int, default=4, help="Number of parallel environments")

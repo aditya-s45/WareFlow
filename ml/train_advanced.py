@@ -6,7 +6,7 @@ from datetime import datetime
 from collections import deque
 
 import numpy as np
-from stable_baselines3 import PPO
+from stable_baselines3 import DQN
 from stable_baselines3.common.vec_env import SubprocVecEnv, DummyVecEnv
 from stable_baselines3.common.callbacks import (
     CheckpointCallback,
@@ -125,13 +125,13 @@ def train_advanced(args):
         print(f"❌ ERROR: File not found: {args.pretrained}")
         sys.exit(1)
 
-    model = PPO.load(
+    model = DQN.load(
         args.pretrained,
         env=vec_env,
         device="auto",
         custom_objects={
             "learning_rate": args.lr,
-            "ent_coef": args.ent_coef,
+            
         }
     )
 

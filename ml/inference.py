@@ -7,7 +7,7 @@ import asyncio
 import numpy as np
 from typing import Optional, Dict, Any, AsyncGenerator
 
-from stable_baselines3 import PPO
+from stable_baselines3 import DQN
 
 # CRITICAL FIX: Add the 'ml' folder directly to sys.path so SB3 can find 'agent_model' during unpickling
 ml_dir = os.path.dirname(os.path.abspath(__file__))
@@ -19,7 +19,7 @@ import agent_model
 
 class InferenceRunner:
     """
-    Runs a trained PPO model in ML1's WarehouseEnv and yields
+    Runs a trained DQN model in ML1's WarehouseEnv and yields
     get_state() JSON for each step. Designed for the WebSocket pipeline.
     """
 
@@ -36,7 +36,7 @@ class InferenceRunner:
         if not os.path.exists(checkpoint_path):
             raise FileNotFoundError(f"Checkpoint not found: {checkpoint_path}")
 
-        self.model = PPO.load(checkpoint_path, device=device)
+        self.model = DQN.load(checkpoint_path, device=device)
         self.grid_size = grid_size
         self.max_steps = max_steps
         self.step_delay = step_delay
